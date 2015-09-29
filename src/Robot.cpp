@@ -28,24 +28,33 @@ class Robot : public SampleRobot
 
 	// Elevator declarations
 
-	Talon *eLeft;
-	Talon *eRight;
+	Talon *eLeft; // pwm 0
+	Talon *eRight; // pwm 1
 
 	DoubleSolenoid *epLeft; // PCM ports 0 and 1
 	DoubleSolenoid *epRight; // PCM ports 2 and 3
 
 	// intake declarations
 
-	Talon iLeft; // pwm 2
-	Talon iRight; // pwm 3
+	Talon *iLeft; // pwm 2
+	Talon *iRight; // pwm 3
 
-	DoubleSolenoid *ipLeft;
-	DoubleSolenoid *ipRight;
+	DoubleSolenoid *ipLeft; // PCM ports 4 and 5
+	DoubleSolenoid *ipRight; // PCM ports 6 and 7
+
+	// operator interface declarations - prefixed by oi
+	Joystick *oiLeft;
+	Joystick *oiRight;
+	F310 *oiGamepad;
 
 public:
 
 	Robot()
 {
+		oiLeft = new Joystick(0);
+		oiRight = new Joystick(1);
+		oiGamepad = new F310(3);
+
 		dbFrontLeft = new Talon(6);
 		dbRearLeft = new Talon(4);
 		dbFrontRight = new Talon(7);
@@ -75,8 +84,14 @@ public:
 		epLeft = new DoubleSolenoid(0, 0, 1);
 		epRight = new DoubleSolenoid(0, 2, 3);
 
+		eLeft = new Talon(0);
+		eRight = new Talon(1);
+
+		ipLeft = new DoubleSolenoid(0, 4, 5);
+		ipRight = new DoubleSolenoid(0, 6, 7);
+
 		iLeft = new Talon(2);
-		iRight = new Talon(3);
+		iRight= new Talon(3);
 
 }
 
