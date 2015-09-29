@@ -26,6 +26,22 @@ class Robot : public SampleRobot
 	// NOTE: gyros can(as of this writing) ONLY be used on AIN 0 and 1
 	Gyro *dbGyro; // AIN 0
 
+	// Elevator declarations
+
+	Talon *eLeft;
+	Talon *eRight;
+
+	DoubleSolenoid *epLeft; // PCM ports 0 and 1
+	DoubleSolenoid *epRight; // PCM ports 2 and 3
+
+	// intake declarations
+
+	Talon iLeft; // pwm 2
+	Talon iRight; // pwm 3
+
+	DoubleSolenoid *ipLeft;
+	DoubleSolenoid *ipRight;
+
 public:
 
 	Robot()
@@ -36,15 +52,52 @@ public:
 		dbRearRight = new Talon(9);
 
 		dbDrive = new RobotDrive(dbFrontLeft, dbRearLeft, dbFrontRight, dbRearRight);
+		dbDrive->SetSafetyEnabled(true);
+		dbDrive->SetExpiration(0.1);
+		dbDrive->SetSensitivity(0.5);
+		dbDrive->SetMaxOutput(1.0);
 
 		dbMiddleLeft = new Talon(5);
 		dbMiddleRight = new Talon(8);
 
 		dbLeftEncoder = new Encoder(0, 1, false, Encoder::k4X);
+		dbLeftEncoder->SetDistancePerPulse(DRIVE_DISTANCE_PER_PULSE);
+
 		dbRightEncoder = new Encoder(2, 3, false, Encoder::k4X);
+		dbRightEncoder->SetDistancePerPulse(DRIVE_DISTANCE_PER_PULSE);
+
 		dbMidEncoder = new Encoder(4, 5, false, Encoder::k4X);
+		dbMidEncoder->SetDistancePerPulse(MIDDLE_DISTANCE_PER_PULSE);
 
 		dbGyro = new Gyro(0);
+		dbGyro->SetSensitivity(0.007);
+
+		epLeft = new DoubleSolenoid(0, 0, 1);
+		epRight = new DoubleSolenoid(0, 2, 3);
+
+		iLeft = new Talon(2);
+		iRight = new Talon(3);
+
 }
+
+	void Autonomous(void)
+	{
+
+	}
+
+	void OperatorControl(void)
+	{
+
+	}
+
+	void Disabled(void)
+	{
+
+	}
+
+	void Test(void)
+	{
+
+	}
 };
 START_ROBOT_CLASS(Robot);
