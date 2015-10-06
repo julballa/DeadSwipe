@@ -7,7 +7,7 @@
  *
  * @param port The driverstation port the F310 is plugged into.
  */
-F310::F310(UINT32 port)
+F310::F310(int port)
 	: Joystick(port)
 {
 

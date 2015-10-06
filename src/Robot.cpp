@@ -1,5 +1,6 @@
 #include "WPILib.h"
 #include "DeadSwipe.h"
+#include "F310.h"
 
 class Robot : public SampleRobot
 {
@@ -33,6 +34,9 @@ class Robot : public SampleRobot
 
 	DoubleSolenoid *epLeft; // PCM ports 0 and 1
 	DoubleSolenoid *epRight; // PCM ports 2 and 3
+
+	Encoder *eLeftEnc; // DIO 6 and 7
+	Encoder *eRightEnc; // DIO 8 and 9
 
 	// intake declarations
 
@@ -87,23 +91,59 @@ public:
 		eLeft = new Talon(0);
 		eRight = new Talon(1);
 
+		eLeftEnc = new Encoder(6, 7, false, Encoder::k4X);
+		eLeftEnc->SetDistancePerPulse(ELEVATOR_DISTANCE_PER_PULSE);
+
+		eRightEnc = new Encoder(8, 9, false, Encoder::k4X);
+		eRightEnc->SetDistancePerPulse(ELEVATOR_DISTANCE_PER_PULSE);
+
 		ipLeft = new DoubleSolenoid(0, 4, 5);
 		ipRight = new DoubleSolenoid(0, 6, 7);
 
 		iLeft = new Talon(2);
 		iRight= new Talon(3);
 
-}
+} // end of constructor
 
 	void Autonomous(void)
 	{
+		while(IsEnabled() && IsAutonomous())
+		{
+			this->Debug();
 
-	}
+		} // end of while loop
+
+	} // end of auton
 
 	void OperatorControl(void)
 	{
+		while(IsOperatorControl() && IsEnabled())
+		{
+			this->Debug();
 
-	}
+			if(oiGamepad->GetButton(F310::kXButton) == true)
+			{
+				this->ePneumaticControl(B_CLOSE);
+			}
+
+			if(oiGamepad->GetButton(F310::kBButton) == true)
+			{
+				this->ePneumaticControl(B_OPEN);
+			}
+
+			if(oiGamepad->GetButton(F310::kXButton) && oiGamepad->GetButton(F310::kBButton))
+			{
+				// do nothing.
+			}
+			dbDrive->TankDrive(oiLeft->GetY(), oiRight->GetY());
+			if (oiRight->GetRawButton(1) == true)
+			{
+				this->HDrive(oiRight->GetX());
+			}
+
+		} // end or while loop
+
+	} // end of teleop
 
 	void Disabled(void)
 	{
@@ -113,6 +153,94 @@ public:
 	void Test(void)
 	{
 
+	}
+
+	// h drive function
+	void HDrive(float speed)
+	{
+		dbMiddleLeft->Set(speed);
+		dbMiddleRight->Set(speed);
+	}
+
+	// elevator pneumatic function
+	void ePneumaticControl(int x)
+	{
+		switch(x)
+		{
+		case L_OPEN:
+			this->epLeft->Set(DoubleSolenoid::kReverse);
+			break;
+		case L_CLOSE:
+			this->epLeft->Set(DoubleSolenoid::kForward);
+			break;
+		case R_OPEN:
+			this->epRight->Set(DoubleSolenoid::kReverse);
+			break;
+		case R_CLOSE:
+			this->epRight->Set(DoubleSolenoid::kForward);
+			break;
+		case B_OPEN:
+			this->epLeft->Set(DoubleSolenoid::kReverse);
+			this->epRight->Set(DoubleSolenoid::kReverse);
+			break;
+		case B_CLOSE:
+			this->epLeft->Set(DoubleSolenoid::kForward);
+			this->epRight->Set(DoubleSolenoid::kForward);
+			break;
+		default:
+			break;
+		}
+	}
+
+	// intake pnematic function
+	void iPneumaticControl(int x)
+		{
+			switch(x)
+			{
+			case L_OPEN:
+				this->ipLeft->Set(DoubleSolenoid::kReverse);
+				break;
+			case L_CLOSE:
+				this->ipLeft->Set(DoubleSolenoid::kForward);
+				break;
+			case R_OPEN:
+				this->ipRight->Set(DoubleSolenoid::kReverse);
+				break;
+			case R_CLOSE:
+				this->ipRight->Set(DoubleSolenoid::kForward);
+				break;
+			case B_OPEN:
+				this->ipLeft->Set(DoubleSolenoid::kReverse);
+				this->ipRight->Set(DoubleSolenoid::kReverse);
+				break;
+			case B_CLOSE:
+				this->ipLeft->Set(DoubleSolenoid::kForward);
+				this->ipRight->Set(DoubleSolenoid::kForward);
+				break;
+			default:
+				break;
+			}
+		}
+	// drive train debug function
+	void dbDebug()
+	{
+		SmartDashboard::PutNumber("dbMiddle:", dbMidEncoder->GetDistance());
+		SmartDashboard::PutNumber("dbLeft:", dbLeftEncoder->GetDistance());
+		SmartDashboard::PutNumber("dbRight:", dbRightEncoder->GetDistance());
+		SmartDashboard::PutNumber("dbGyro:", dbGyro->GetAngle());
+	}
+
+	// elevator debug function
+	void eDebug()
+	{
+		SmartDashboard::PutNumber("eLeft", eLeftEnc->GetDistance());
+		SmartDashboard::PutNumber("eRight", eRightEnc->GetDistance());
+	}
+
+	void Debug()
+	{
+		this->dbDebug();
+		this->eDebug();
 	}
 };
 START_ROBOT_CLASS(Robot);
