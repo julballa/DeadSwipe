@@ -33,9 +33,7 @@ class Robot : public SampleRobot
 	Talon *eRight; // pwm 1
 
 	DoubleSolenoid *epLeft; // PCM ports 0 and 1
-	DoubleSolenoid *McGrath;
 	DoubleSolenoid *epRight; // PCM ports 2 and 3
-	DoubleSolenoid *Abigail_Rose;
 
 	Encoder *eLeftEnc; // DIO 6 and 7
 	Encoder *eRightEnc; // DIO 8 and 9
@@ -95,8 +93,6 @@ public:
 
 		epLeft = new DoubleSolenoid(0, 0, 1);
 		epRight = new DoubleSolenoid(0, 2, 3);
-		McGrath = epRight;
-		Abigail_Rose = epLeft;
 
 		eLeft = new Talon(0);
 		eRight = new Talon(1);
@@ -112,12 +108,7 @@ public:
 
 		iLeft = new Talon(2);
 		iRight= new Talon(3);
-// ~26 in  or 25.5
-// -11 in off the ground
-// 2 3/4 int form the wheels
-// 1.3 in w/o windage
-// 1.5 in at start
-// 2 in at end
+
 } // end of constructor
 
 	void Autonomous(void)
