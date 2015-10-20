@@ -133,6 +133,8 @@ public:
 
 	void OperatorControl(void)
 	{
+		bool manualOverride = true;
+
 		while(IsOperatorControl() && IsEnabled())
 		{
 			this->Debug();
@@ -151,10 +153,21 @@ public:
 			{
 				// do nothing.
 			}
+
+			if (oiGamepad->GetButton(F310::kStartButton))
+			{
+				manualOverride = ~manualOverride;
+			}
 			dbDrive->TankDrive(oiLeft->GetY(), oiRight->GetY());
 			if (oiRight->GetRawButton(1) == true)
 			{
 				this->HDrive(oiRight->GetX());
+			}
+
+			if (manualOverride == true)
+			{
+				eLeft->Set(oiGamepad->GetRawAxis(1));
+				eRight->Set(oiGamepad->GetRawAxis(3));
 			}
 
 		} // end or while loop
