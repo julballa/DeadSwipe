@@ -24,6 +24,7 @@ float EncoderMagic(float x)
 {
 	float C = (2 *PI) * (RADIUS + (x * THICKNESS));
 
+
 	return C / ELEVATOR_GEAR_RATIO * OPTICAL_PPR;
 }
 
