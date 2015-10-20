@@ -33,7 +33,9 @@ class Robot : public SampleRobot
 	Talon *eRight; // pwm 1
 
 	DoubleSolenoid *epLeft; // PCM ports 0 and 1
+	DoubleSolenoid *McGrath;
 	DoubleSolenoid *epRight; // PCM ports 2 and 3
+	DoubleSolenoid *Abigail_Rose;
 
 	Encoder *eLeftEnc; // DIO 6 and 7
 	Encoder *eRightEnc; // DIO 8 and 9
@@ -50,6 +52,9 @@ class Robot : public SampleRobot
 	Joystick *oiLeft;
 	Joystick *oiRight;
 	F310 *oiGamepad;
+	SendableChooser *autoChooser; // this is how we'll select different
+	int mode1 = 0;
+	int mode2 = 1;
 
 public:
 
@@ -58,6 +63,9 @@ public:
 		oiLeft = new Joystick(0);
 		oiRight = new Joystick(1);
 		oiGamepad = new F310(3);
+		autoChooser = new SendableChooser();
+		autoChooser->AddDefault("Do Nuffin", (int *) mode1);
+		autoChooser->AddObject("Move you goddamm robot", (int *) mode2);
 
 		dbFrontLeft = new Talon(6);
 		dbRearLeft = new Talon(4);
@@ -87,6 +95,8 @@ public:
 
 		epLeft = new DoubleSolenoid(0, 0, 1);
 		epRight = new DoubleSolenoid(0, 2, 3);
+		McGrath = epRight;
+		Abigail_Rose = epLeft;
 
 		eLeft = new Talon(0);
 		eRight = new Talon(1);
@@ -102,13 +112,28 @@ public:
 
 		iLeft = new Talon(2);
 		iRight= new Talon(3);
-
+// ~26 in  or 25.5
+// -11 in off the ground
+// 2 3/4 int form the wheels
+// 1.3 in w/o windage
+// 1.5 in at start
+// 2 in at end
 } // end of constructor
 
 	void Autonomous(void)
 	{
+		int aSelectedMode = (int) autoChooser->GetSelected();
 		while(IsEnabled() && IsAutonomous())
 		{
+			this->Debug();
+			switch (aSelectedMode) {
+				case 1:
+					break;
+				case 2:
+					break;
+				default:
+					break;
+			}
 			this->Debug();
 
 		} // end of while loop
