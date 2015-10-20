@@ -21,7 +21,7 @@
 // 1.3 in w/o windage
 // 1.5 in at start
 // 2 in at end
-float sigmoid();
+float sigmoid(float e,float m,float f,float s);
 float EncoderMagic(float x);
 
 

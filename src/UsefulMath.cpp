@@ -8,8 +8,31 @@
 #include "UsefulMath.h"
 #include "DeadSwipe.h"
 
-float sigmoid()
+// the sigmoid control loops used to make sure a motor reaches its
+// target without over/undershooting
+// o(e) = ((e / (m + |e|)) + f) * s where
+// e is the error(distance from the target)
+// m is the slope modifier
+// f is the feedforward value
+// s is the max speed of the motor
+float sigmoid(float e,float m,float f,float s)
 {
+	float output = 0.0;
+	if ( e > 0) {
+		output = ((e/ m + abs(e)) + f) * s;
+	} else if (e < 0) {
+		output = ((e/ m + abs(e)) - f) * s;
+	} else {
+		output = 0.0;
+	}
+
+	if (output > 1.0) {
+		return 1;
+	} else if (output < -1.0) {
+		return -1.0;
+	} else {
+		return output;
+	}
 }
 
 // our DPP fix for the elevator
