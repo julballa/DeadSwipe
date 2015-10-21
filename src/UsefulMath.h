@@ -23,6 +23,7 @@
 // 2 in at end
 float sigmoid(float e,float m,float f,float s);
 float EncoderMagic(float x);
+float scaleyFunction(float JoyRaw, int c, int steepyness );
 
 
 
