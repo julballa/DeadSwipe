@@ -23,6 +23,11 @@ class Robot : public SampleRobot
 	Encoder *dbRightEncoder; // DIO 2 and 3
 	Encoder *dbMidEncoder; // DIO 4 and 5
 
+	DigitalInput *eLeftBottom;
+	DigitalInput *eRightBottom;
+	DigitalInput *eLeftTop;
+	DigitalInput *eRightTop;
+
 	// gyro declaration - gyros allow us to measure how much an object has rotated along an axis
 	// NOTE: gyros can(as of this writing) ONLY be used on AIN 0 and 1
 	Gyro *dbGyro; // AIN 0
@@ -88,6 +93,11 @@ public:
 		dbMidEncoder = new Encoder(4, 5, false, Encoder::k4X);
 		dbMidEncoder->SetDistancePerPulse(MIDDLE_DISTANCE_PER_PULSE);
 
+		eLeftBottom = new DigitalInput(6);
+		eRightBottom = new DigitalInput(7);
+		eLeftTop = new DigitalInput(8);
+		eRightTop = new DigitalInput(9);
+
 		dbGyro = new Gyro(0);
 		dbGyro->SetSensitivity(0.007);
 
@@ -143,6 +153,27 @@ public:
 			{
 				this->ePneumaticControl(B_CLOSE);
 			}
+
+			if(oiGamepad->GetButton(F310::kRightTrigger) == true)
+			{
+				 if((eLeftTop->Get() == 0) && (eRightTop->Get() == 0))
+				{
+					 eLeft->Set(1.0);
+					 eRight->Set(1.0);
+				}
+
+			}
+
+			if(oiGamepad->GetButton(F310::kLeftTrigger) == true)
+			{
+				if((eLeftBottom->Get() == 0) && (eRightBottom->Get() == 0))
+				{
+					eLeft->Set(0.0);
+					eRight->Set(0.0);
+				}
+			}
+
+
 
 			if(oiGamepad->GetButton(F310::kBButton) == true)
 			{
