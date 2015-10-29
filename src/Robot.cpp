@@ -157,10 +157,15 @@ public:
 			if(oiGamepad->GetButton(F310::kRightTrigger) == true)
 			{
 				 if((eLeftTop->Get() == 0) && (eRightTop->Get() == 0))
-				{
+				 {
 					 eLeft->Set(1.0);
 					 eRight->Set(1.0);
-				}
+				 }
+				 else
+				 {
+					 eLeft->Set(0.0);
+					 eRight->Set(0.0);
+				 }
 
 			}
 
@@ -168,11 +173,15 @@ public:
 			{
 				if((eLeftBottom->Get() == 0) && (eRightBottom->Get() == 0))
 				{
+					eLeft->Set(-1.0);
+					eRight->Set(-1.0);
+				}
+				else
+				{
 					eLeft->Set(0.0);
 					eRight->Set(0.0);
 				}
 			}
-
 
 
 			if(oiGamepad->GetButton(F310::kBButton) == true)
